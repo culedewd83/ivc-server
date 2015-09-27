@@ -3,19 +3,17 @@ package app;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import models.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import utils.JsonHelper;
 import utils.TextEncryptor;
 
 
 @RestController
 public class RestAPIController {
-    private static Gson mJson = new GsonBuilder().setPrettyPrinting().create();
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public BasicResponse createProfile(@RequestParam(value="data") String data) {
@@ -32,7 +30,7 @@ public class RestAPIController {
 
         ProfileInfo info;
         try {
-            info = mJson.fromJson(json, ProfileInfo.class);
+            info = JsonHelper.getInstance().json.fromJson(json, ProfileInfo.class);
         } catch (Exception e) {
             response.message = "Error occurred creating profile\nCode: 002";
             return response;
@@ -107,7 +105,7 @@ public class RestAPIController {
             if (p != null && p.aNumber != null && p.aNumber.equals(key)) {
                 response.success = true;
                 response.message = "success";
-                response.data = TextEncryptor.encrypt(mJson.toJson(p));
+                response.data = TextEncryptor.encrypt(JsonHelper.getInstance().json.toJson(p));
                 return response;
             }
         }
@@ -137,7 +135,7 @@ public class RestAPIController {
         }
 
         try {
-            profile = mJson.fromJson(json, Profile.class);
+            profile = JsonHelper.getInstance().json.fromJson(json, Profile.class);
         } catch (Exception e) {
             response.message = "Error occurred saving profile\nCode: 003";
             return response;

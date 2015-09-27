@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import models.Profile;
+import utils.JsonHelper;
 
 import java.io.*;
 import java.util.List;
@@ -22,20 +23,17 @@ public class Storage {
 
     private static final String DATA_FILE = "data.json";
 
-    private Gson mJson;
     private List<Profile> mProfiles;
-
     public List<Profile> getProfiles() {
         return mProfiles;
     }
 
     private Storage() {
-        mJson = new GsonBuilder().setPrettyPrinting().create();
-
         File f = new File(DATA_FILE);
         if(f.exists() && !f.isDirectory()) {
             try {
-                mProfiles = mJson.fromJson(new FileReader(f), new TypeToken<CopyOnWriteArrayList<Profile>>() {
+                mProfiles = JsonHelper.getInstance().json
+                        .fromJson(new FileReader(f), new TypeToken<CopyOnWriteArrayList<Profile>>() {
                 }.getType());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -48,7 +46,7 @@ public class Storage {
     }
 
     public void saveProfiles() {
-        String json = mJson.toJson(mProfiles);
+        String json = JsonHelper.getInstance().json.toJson(mProfiles);
         File f = new File(DATA_FILE);
         try {
             FileWriter fw = new FileWriter(f);
