@@ -6,6 +6,8 @@ package models;
 public class ReportTemplate {
     public String name;
     public String course;
+    public String instructor;
+    public String time;
     public String room;
     public String origin;
     public String facilitatorPresent;
